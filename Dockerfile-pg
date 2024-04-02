@@ -1,0 +1,11 @@
+FROM postgres:13-bullseye
+
+COPY id_rsa.pub /root/.ssh/
+RUN apt update && apt install openssh-server iptables -y && echo "PasswordAuthentication no" >> /etc/ssh/sshd_config
+RUN cat /root/.ssh/id_rsa.pub > /root/.ssh/authorized_keys
+
+COPY start.sh .
+RUN chmod +x ./start.sh
+
+ENTRYPOINT ["./start.sh"]
+CMD ["postgres"]
